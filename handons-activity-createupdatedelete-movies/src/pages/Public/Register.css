@@ -1,0 +1,109 @@
+/* Register.css */
+
+.Register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #282c34; /* Dark background color */
+}
+
+.main-container {
+  width: 400px; /* Fixed width for the form */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center children horizontally */
+}
+
+.form-container {
+  padding: 2rem; /* Padding inside the form */
+  border: 1px solid #61dafb; /* Light blue border around the form */
+  border-radius: 0.5rem; /* Rounded corners */
+  background-color: #ffffff; /* White background for form */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  width: 100%; /* Full width for the form */
+}
+
+h3 {
+  color: #61dafb; /* Cool blue color for heading */
+  margin: 0; /* Remove default margin */
+  padding-bottom: 10px; /* Space below the heading */
+  text-align: center; /* Center the title */
+  font-family: 'Arial', sans-serif; /* Clean font for formal look */
+  font-size: 1.5rem; /* Larger font size for title */
+  position: relative; /* Position for the line effect */
+}
+
+/* Line effect under the title */
+h3::after {
+  content: ""; /* Empty content for pseudo-element */
+  display: block; /* Block display to take full width */
+  width: 70%; /* Line width to match title */
+  height: 2px; /* Line thickness */
+  background-color: #61dafb; /* Cool blue color for the line */
+  margin: 0.5rem auto 1rem auto; /* Center the line and add margin */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Space below each form group */
+  width: 100%; /* Full width for form groups */
+  display: flex;
+  flex-direction: column; /* Stack label and input vertically */
+}
+
+label {
+  color: #282c34; /* Dark text color for labels */
+  margin-bottom: 0.5rem; /* Space below labels */
+}
+
+input {
+  padding: 0.5rem; /* Padding inside input */
+  border: 1px solid #ccc; /* Border for input */
+  border-radius: 0.25rem; /* Rounded corners for input */
+  font-size: 1rem; /* Font size for input */
+  width: 100%; /* Full width for inputs */
+}
+
+.errors {
+  color: red; /* Red color for error messages */
+  font-size: 12px; /* Font size for error messages */
+  margin-top: 0.25rem; /* Space above error messages */
+  text-align: center; /* Center error messages */
+}
+
+.submit-container {
+  margin-top: 20px; /* Space above submit button */
+  text-align: center; /* Center the button */
+}
+
+button {
+  background-color: #61dafb; /* Light blue background for button */
+  color: #282c34; /* Dark text color for button */
+  border: none; /* No border */
+  padding: 0.75rem 1.5rem; /* Padding for button */
+  border-radius: 0.25rem; /* Rounded corners for button */
+  font-size: 1rem; /* Font size for button */
+  cursor: pointer; /* Pointer cursor for button */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+button:hover {
+  background-color: #21a1f1; /* Darker blue on hover */
+}
+
+.login-container {
+  margin-top: 10px; /* Space above login link */
+  text-align: center; /* Center login link */
+}
+
+a {
+  color: #61dafb; /* Cool blue color for links */
+  text-decoration: none; /* No underline for links */
+}
+
+a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+
+

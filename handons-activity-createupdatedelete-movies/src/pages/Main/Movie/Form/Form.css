@@ -1,0 +1,55 @@
+body {
+  overflow-y: auto;
+  height: 100%;
+  margin: 0;
+  background-color: #1c1c1e; /* Dark background for cinematic look */
+  font-family: 'Poppins', sans-serif;
+  color: #e0e0e0; /* Light grey text for readability */
+}
+
+/* Main container for the movie and form areas */
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Styling for the searched movie area */
+.searched-movie {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #333; /* Darker border for contrast */
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #2c2c2e; /* Dark grey background */
+  width: 300px;
+  margin-left: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+}
+
+/* Form container styling */
+.edit-container {
+  flex-grow: 1;
+  margin-right: 20px;
+  padding: 10px;
+  background-color: #2c2c2e; /* Matches dark theme */
+  border: 1px solid #333; /* Darker border */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Pronounced shadow */
+  color: #e0e0e0; /* Text color for readability */
+}
+
+/* Hover effect for search container paragraphs */
+.search-container p:hover {
+  background-color: #3a3a3a; /* Darker grey for hover effect */
+  transition: background-color 0.3s;
+}
+
+/* Poster image styling */
+.poster-image {
+  width: 150px;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Deeper shadow for images */
+}

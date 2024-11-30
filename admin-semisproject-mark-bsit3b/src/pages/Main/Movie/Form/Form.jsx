@@ -409,7 +409,7 @@ const Form = () => {
               onClick={handleSave}
               disabled={isLoading || !formData.title}
             >
-              {isLoading ? "Saving..." : "Save Movie"}
+              {isLoading ? "Saving..." : "Update Movie"}
             </button>
           </div>
         </form>

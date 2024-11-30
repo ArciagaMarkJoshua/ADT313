@@ -1,54 +1,147 @@
+/* General styling */
 body {
-  overflow-y: auto;
-  height: 100%;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
   margin: 0;
-  background-color: #1c1c1e; 
-  font-family: 'Poppins', sans-serif;
-  color: #e0e0e0; 
+  padding: 0;
 }
-
 
 .container {
-  display: flex;
-  justify-content: space-between;
+  max-width: 5000px;
+  margin: 0 auto;
   padding: 20px;
-  box-sizing: border-box;
 }
 
+.field {
+  margin-bottom: 15px;
+}
 
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+}
+
+.loading-message {
+  color: green;
+  margin-bottom: 15px;
+}
+
+/* Cast styling */
+.cast-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+li input {
+  margin-left: 10px;
+  flex: 1;
+}
+
+/* Photo gallery styling */
+.photo-gallery {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.photo-gallery .photo-item {
+  width: 300px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Video gallery styling */
+.video-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.video-gallery iframe {
+  width: 300px;
+  height: 180px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Pagination styling */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.pagination button {
+  padding: 5px 15px;
+}
+
+/* Poster image styling */
+.poster-image {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+/* Search movie list styling */
 .searched-movie {
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #333; 
-  border-radius: 8px;
+  border: 1px solid #ddd;
   padding: 10px;
-  background-color: #2c2c2e; 
-  margin-left: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+  margin: 15px 0;
 }
 
-
-.edit-container {
-  flex-grow: 1;
-  margin-right: 20px;
-  padding: 10px;
-  background-color: #2c2c2e; 
-  border: 1px solid #333; 
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
-  color: #e0e0e0; 
+.searched-movie p {
+  margin: 5px 0;
+  cursor: pointer;
 }
 
-
-.search-container p:hover {
-  background-color: #3a3a3a; 
-  transition: background-color 0.3s;
+.searched-movie p.selected {
+  color: #007bff;
+  font-weight: bold;
 }
 
-
-.poster-image {
-  width: 150px;
-  height: auto;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
+.searched-movie p:hover {
+  text-decoration: underline;
 }

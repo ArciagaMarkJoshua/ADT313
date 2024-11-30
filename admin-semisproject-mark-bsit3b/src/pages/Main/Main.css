@@ -1,32 +1,32 @@
 .Main {
   display: flex;
   overflow-y: auto;
-  max-height: 100vh;
+  max-height: 250vh;
   font-family: 'Poppins', sans-serif;
-  background-color: #121212; /* Dark background for cinematic feel */
+  background-color: #121212; 
 }
 
 .Main .container {
   display: flex;
-  width: 100vw;
+  width: 400vw;
 }
 
 .Main .container .outlet {
   flex-grow: 3;
   padding: 1.5rem;
-  background-color: #1c1c1e; /* Deep grey for content background */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* More pronounced shadow for drama */
+  background-color: #1c1c1e; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
   border-radius: 10px;
-  color: #e0e0e0; /* Light grey for readability */
+  color: #e0e0e0; 
 }
 
 .Main .container .navigation {
-  background-color: #181818; /* Very dark grey for navigation */
+  background-color: #181818; 
   padding-top: 40px;
-  height: 100vh;
-  color: #b3b3b3; /* Softer grey for text */
+  height: 240vh;
+  color: #b3b3b3; 
   transition: background-color 0.3s;
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); /* Stronger shadow on right side */
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); 
 }
 
 .Main .container .navigation ul {
@@ -44,7 +44,7 @@
 
 .Main .container .navigation ul li.active,
 .Main .container .navigation ul li:hover {
-  background: #30336b; /* Bold navy-blue accent for hover and active states */
+  background: #30336b; 
   color: #e0e0e0;
 }
 
@@ -57,10 +57,9 @@
 
 .Main .container .navigation ul li.logout {
   cursor: pointer;
-  background: #d63031; /* Cinematic red for logout */
-  color: white;
+  background: #d63031; 
 }
 
 .Main .container .navigation ul li.logout:hover {
-  background: #c0392b; /* Darker red for hover effect */
+  background: #c0392b; 
 }

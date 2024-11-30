@@ -165,9 +165,50 @@ const Form = () => {
   };
 
   const handleSave = () => {
-    console.log("Saving movie data:", formData, castAndCrew);
+    if (!formData.title) {
+      setError("Movie title is required!");
+      return;
+    }
+  
+    setError(""); // Clear any error messages
+  
+    // If editing an existing movie
+    if (selectedMovie) {
+      const index = searchedMovieList.findIndex(
+        (movie) => movie.id === selectedMovie.id
+      );
+  
+      if (index !== -1) {
+        const updatedList = [...searchedMovieList];
+        updatedList[index] = {
+          ...selectedMovie,
+          original_title: formData.title,
+          overview: formData.overview,
+          popularity: formData.popularity,
+          release_date: formData.releaseDate,
+          vote_average: formData.voteAverage,
+        };
+        setSearchedMovieList(updatedList);
+        setSelectedMovie(updatedList[index]); // Update selectedMovie with the new data
+      }
+    } else {
+      // If adding a new movie
+      const newMovie = {
+        id: Date.now(), // Unique ID for the new movie
+        original_title: formData.title,
+        overview: formData.overview,
+        popularity: formData.popularity,
+        release_date: formData.releaseDate,
+        vote_average: formData.voteAverage,
+      };
+      setSearchedMovieList((prevList) => [...prevList, newMovie]);
+      setSelectedMovie(newMovie); // Set the new movie as the selected one
+    }
+  
+    console.log("Movie saved successfully:", formData);
   };
-
+  
+  
   return (
     <>
       <h1>{movieId !== undefined ? "Edit" : "Create"} Movie</h1>
@@ -333,7 +374,7 @@ const Form = () => {
       
           {photos.length > 0 && (
             <div className="photo-gallery">
-              {photos.slice(0, 3).map((photo) => (
+              {photos.slice(0, 5).map((photo) => (
                 <img
                   key={photo.file_path}
                   src={`https://image.tmdb.org/t/p/original${photo.file_path}`}

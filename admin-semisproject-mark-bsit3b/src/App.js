@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import Login from './pages/Public/Login/Login';
-import Register from './pages/Public/Register'; // Ensure this path is correct
+import Register from './pages/Public/Register'; 
 import Dashboard from './pages/Main/Dashboard/Dashboard';
 import Main from './pages/Main/Main';
 import Movie from './pages/Main/Movie/Movie';
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     element: <Main />,
     children: [
       {
-        path: 'dashboard', // Added the dashboard route
+        path: 'dashboard', 
         element: <Dashboard />,
       },
       {
@@ -32,11 +32,11 @@ const router = createBrowserRouter([
         element: <Movie />,
         children: [
           {
-            path: '', // Default route for movies, renders Lists
+            path: '', 
             element: <Lists />,
           },
           {
-            path: 'form/:movieId?', // Optional movieId parameter for the form
+            path: 'form/:movieId?', 
             element: <Form />,
           },
         ],

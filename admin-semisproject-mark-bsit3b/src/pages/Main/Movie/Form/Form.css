@@ -1,4 +1,4 @@
-/* General styling */
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -48,10 +48,10 @@ button:disabled {
   margin-bottom: 15px;
 }
 
-/* Cast styling */
+
 .cast-photo {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
@@ -73,7 +73,7 @@ li input {
   flex: 1;
 }
 
-/* Photo gallery styling */
+
 .photo-gallery {
   display: flex;
   gap: 10px;
@@ -87,7 +87,7 @@ li input {
   border-radius: 5px;
 }
 
-/* Video gallery styling */
+
 .video-gallery {
   display: flex;
   flex-wrap: wrap;
@@ -102,7 +102,7 @@ li input {
   border: 1px solid #ddd;
 }
 
-/* Pagination styling */
+
 .pagination {
   display: flex;
   justify-content: space-between;
@@ -113,8 +113,18 @@ li input {
 .pagination button {
   padding: 5px 15px;
 }
+.movie-poster {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto 20px;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-/* Poster image styling */
+
 .poster-image {
   width: 200px;
   height: auto;
@@ -123,7 +133,7 @@ li input {
   margin: 0 auto 20px;
 }
 
-/* Search movie list styling */
+
 .searched-movie {
   max-height: 200px;
   overflow-y: auto;

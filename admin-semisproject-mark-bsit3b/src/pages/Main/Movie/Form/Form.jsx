@@ -3,6 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Form.css";
 
+
+const API_KEY = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5M2Q4YTQwMGVlMzFkMzQ4MGYzNjdlMjk2OGMzODhhZSIsIm5iZiI6MTczMzE1MTAyNS4yNTQwMDAyLCJzdWIiOiI2NzRkYzkzMTc0NzM3NzhiYmQ5YWY3YzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.4wKA26LOjYKY3fGsk-zmp0YOvGr7YPfi_IWUf6W7MSE";
+
 const Form = () => {
   const [query, setQuery] = useState("");
   const [searchedMovieList, setSearchedMovieList] = useState([]);
@@ -16,6 +19,7 @@ const Form = () => {
     popularity: "",
     releaseDate: "",
     voteAverage: "",
+    isFeatured: false,
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -35,13 +39,13 @@ const Form = () => {
 
     setIsLoading(true);
     setSearchedMovieList([]);
-// new generated api key since the previous one expires, i think.
+
     axios({
       method: "get",
       url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=${currentPage}`,
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5M2Q4YTQwMGVlMzFkMzQ4MGYzNjdlMjk2OGMzODhhZSIsIm5iZiI6MTczMzE1MTAyNS4yNTQwMDAyLCJzdWIiOiI2NzRkYzkzMTc0NzM3NzhiYmQ5YWY3YzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.4wKA26LOjYKY3fGsk-zmp0YOvGr7YPfi_IWUf6W7MSE", // Replace with your actual API key
+        Authorization: API_KEY, 
       },
     })
       .then((response) => {
@@ -53,7 +57,9 @@ const Form = () => {
         }
       })
       .catch(() => {
-        setError("Unable to search movies at this time. Please try again later.");
+        setError(
+          "unavaible movies, kindly retry again!."
+        );
       })
       .finally(() => {
         setIsLoading(false);
@@ -74,41 +80,39 @@ const Form = () => {
       popularity: movie.popularity,
       releaseDate: movie.release_date,
       voteAverage: movie.vote_average,
+      isFeatured: false,
     });
     setError("");
 
-    
     fetchMovieDetails(movie.id);
   };
 
   const fetchMovieDetails = (movieId) => {
     setIsLoading(true);
 
-   
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-        headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5M2Q4YTQwMGVlMzFkMzQ4MGYzNjdlMjk2OGMzODhhZSIsIm5iZiI6MTczMzE1MTAyNS4yNTQwMDAyLCJzdWIiOiI2NzRkYzkzMTc0NzM3NzhiYmQ5YWY3YzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.4wKA26LOjYKY3fGsk-zmp0YOvGr7YPfi_IWUf6W7MSE" }, // Ensure this API key is correct
-      })
-      .then((response) => setCastAndCrew(response.data.cast))
-      .catch((error) => console.error("Error fetching cast and crew", error));
+    const requests = [
+      axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
+        headers: { Authorization: API_KEY },
+      }),
+      axios.get(`https://api.themoviedb.org/3/movie/${movieId}/images`, {
+        headers: { Authorization: API_KEY },
+      }),
+      axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, {
+        headers: { Authorization: API_KEY },
+      }),
+    ];
 
-    
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/images`, {
-        headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5M2Q4YTQwMGVlMzFkMzQ4MGYzNjdlMjk2OGMzODhhZSIsIm5iZiI6MTczMzE1MTAyNS4yNTQwMDAyLCJzdWIiOiI2NzRkYzkzMTc0NzM3NzhiYmQ5YWY3YzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.4wKA26LOjYKY3fGsk-zmp0YOvGr7YPfi_IWUf6W7MSE" }, 
+    Promise.all(requests)
+      .then(([creditsResponse, imagesResponse, videosResponse]) => {
+        setCastAndCrew(creditsResponse.data.cast);
+        setPhotos(imagesResponse.data.backdrops);
+        setVideos(videosResponse.data.results);
       })
-      .then((response) => setPhotos(response.data.backdrops))
-      .catch((error) => console.error("Error fetching photos", error));
-
-    
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, {
-        headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5M2Q4YTQwMGVlMzFkMzQ4MGYzNjdlMjk2OGMzODhhZSIsIm5iZiI6MTczMzE1MTAyNS4yNTQwMDAyLCJzdWIiOiI2NzRkYzkzMTc0NzM3NzhiYmQ5YWY3YzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.4wKA26LOjYKY3fGsk-zmp0YOvGr7YPfi_IWUf6W7MSE" }, 
-      })
-      .then((response) => setVideos(response.data.results))
-      .catch((error) => console.error("Error fetching videos", error))
+      .catch((error) => console.error("Error fetching any movie detailess!", error))
       .finally(() => setIsLoading(false));
   };
+
+
 
   useEffect(() => {
     if (movieId) {
@@ -138,11 +142,12 @@ const Form = () => {
             popularity: response.data.popularity,
             releaseDate: response.data.releaseDate,
             voteAverage: response.data.voteAverage,
+            isFeatured: response.data.isFeatured || false,
           });
-          fetchMovieDetails(response.data.tmdbId); 
+          fetchMovieDetails(response.data.tmdbId);
         })
         .catch(() => {
-          setError("Unable to load movie details. Please try again later.");
+          setError("unavaible movies, kindly retry again!");
         })
         .finally(() => {
           setIsLoading(false);
@@ -151,22 +156,23 @@ const Form = () => {
   }, [movieId]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, type, value, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
-  const handleCastChange = (index, field, value) => {
-    const updatedCastAndCrew = [...castAndCrew]; 
-    updatedCastAndCrew[index] = {
-      ...updatedCastAndCrew[index],
-      [field]: value, 
-    };
-    setCastAndCrew(updatedCastAndCrew);
-  };
 
-  
+  const handleCastChange = (index, field, value) => {
+    const updatedCast = [...castAndCrew];
+    updatedCast[index][field] = value;
+    setCastAndCrew(updatedCast);
+  };
+  const handlePhotoChange = (index, field, value) => {
+    const updatedPhotos = [...photos];
+    updatedPhotos[index][field] = value;
+    setPhotos(updatedPhotos);
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -178,12 +184,13 @@ const Form = () => {
 
   const validateForm = () => {
     const errors = [];
-    if (!formData.title) errors.push("Title is required");
-    if (!formData.overview) errors.push("Overview is required");
-    if (!formData.releaseDate) errors.push("Release date is required");
-    if (!formData.popularity) errors.push("Popularity is required");
-    if (!formData.voteAverage) errors.push("Vote average is required");
-    if (!selectedMovie) errors.push("Please select a movie from search results");
+    if (!formData.title) errors.push("Title is neeeded");
+    if (!formData.overview) errors.push("Overview is needed");
+    if (!formData.releaseDate) errors.push("Release date is needed");
+    if (!formData.popularity) errors.push("Popularity is needed");
+    if (!formData.voteAverage) errors.push("Vote average is needed");
+    if (!selectedMovie)
+      errors.push("Please select a movie any from search bar results");
     return errors;
   };
 
@@ -199,12 +206,15 @@ const Form = () => {
 
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      setError("You must be logged in to perform this action");
+      setError("you must log in to acccess this feature!");
       setIsLoading(false);
       return;
     }
 
+    const userId = 1;
+
     const data = {
+      userId: userId,
       tmdbId: selectedMovie.id,
       title: formData.title,
       overview: formData.overview,
@@ -213,27 +223,167 @@ const Form = () => {
       voteAverage: parseFloat(formData.voteAverage),
       backdropPath: `https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`,
       posterPath: `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`,
-      isFeatured: 0,
-      videos: formData.videos || [],
-      cast: formData.cast || [],
+      isFeatured: formData.isFeatured,
     };
 
     try {
-      await axios({
-        method: movieId ? "patch" : "post",
-        url: movieId ? `/movies/${movieId}` : "/movies",
-        data,
+      const response = await axios.post("/admin/movies", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+
+      const savedMovieId = response.data.id;
+      console.log(`Movie with ID ${savedMovieId} has been successfully saved.`); 
+
+      await saveVideos(savedMovieId, videos);
+      await saveCast(savedMovieId, castAndCrew);
+      await savePhotos(savedMovieId, photos);
+
       navigate("/main/movies");
     } catch (error) {
-      console.error("Error saving movie:", error.response?.data || error.message);
+      console.error(
+        "Error saving movie:",
+        error.response?.data || error.message
+      );
+      setError("Failed to save a movie. Please Retry again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const saveVideos = async (movieId, videos) => {
+    if (!videos || videos.length === 0) {
+      console.log("No videos available to save!.");
+      return;
+    }
+  
+    const limitedVideos = videos.slice(0, 2);
+  
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = 1;
+  
+    try {
+      const videoPromises = limitedVideos.map((video) => {
+        const videoData = {
+          userId: userId,
+          movieId: movieId,
+          url: `https://www.youtube.com/embed/${video.key}`,
+          name: video.name || "Video Title",
+          site: "YouTube",
+          videoKey: video.key,
+          videoType: video.type || "Clip",
+          official: 0,
+        };
+  
+        return axios.post("/admin/videos", videoData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      });
+  
+      await Promise.all(videoPromises);
+      console.log("Videos saved successfully");
+    } catch (error) {
+      console.error(
+        "Error saving videos:",
+        error.response?.data || error.message
+      );
+      setError("Failed to save any videos. Please Retry again!");
+    }
+  };
+  
+
+  const saveCast = async (movieId, cast) => {
+    if (!cast || cast.length === 0) {
+      console.log("No cast available to save!");
+      return;
+    }
+  
+ 
+    const limitedCast = cast.slice(0, 2);
+  
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = 1;
+  
+    try {
+      const castPromises = limitedCast.map((castMember) => {
+        if (!castMember.profile_path) {
+          throw new Error(`Photo LINK is needed for ${castMember.name}`);
+        }
+  
+        const castData = {
+          userId: userId,
+          movieId: movieId,
+          name: castMember.name,
+          characterName: castMember.character,
+          url: `https://image.tmdb.org/t/p/original${castMember.profile_path}`,
+        };
+  
+        console.log("Saving cast data:", castData);
+  
+        return axios.post("/admin/casts", castData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      });
+  
+      await Promise.all(castPromises);
+      console.log("Cast saved successfully");
+    } catch (error) {
+      console.error(
+        "Error saving cast:",
+        error.response?.data || error.message
+      );
+      setError(error.message || "Failed to save any cast. Please Retry again!");
+    }
+  };
+  
+
+  const savePhotos = async (movieId, photos) => {
+    if (!photos || photos.length === 0) {
+      console.log("No photos available to save.");
+      return;
+    }
+  
+
+    const limitedPhotos = photos.slice(0, 2);
+  
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = 1;
+  
+    
+  try {
+    const photoPromises = limitedPhotos.map((photo) => {
+      const photoData = {
+        userId: userId,
+        movieId: movieId,
+        url: photo.url, 
+        description: photo.description || "",
+      };
+
+      return axios.post("/admin/photos", photoData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    });
+
+    await Promise.all(photoPromises);
+    console.log("Photos saved successfully");
+  } catch (error) {
+    console.error(
+      "Error saving photos:",
+      error.response?.data || error.message
+    );
+    setError("Failed to save any photos. Please Retry again!");
+  }
+};
+
+  
+
 
   const handleUpdate = handleSave;
 
@@ -266,7 +416,7 @@ const Form = () => {
           });
         })
         .catch(() => {
-          setError("Unable to load movie details. Please try again later.");
+          setError("Unable to save any movie detailes. Please Retry again later!");
         })
         .finally(() => {
           setIsLoading(false);
@@ -437,55 +587,85 @@ const Form = () => {
           </div>
 
         
-    <h1>Cast:</h1>      
-    {castAndCrew.length > 0 && (
-      <ul>
-        {castAndCrew.slice(0, 3).map((castMember, index) => (
-          <li key={castMember.cast_id}>
-            {castMember.profile_path && (
-              <img
-                src={`https://image.tmdb.org/t/p/original${castMember.profile_path}`}
-                alt={castMember.name}
-                className="cast-photo"
-              />
-            )}
-            
-            <input
-              type="text"
-              value={castMember.name}
-              onChange={(e) => handleCastChange(index, "name", e.target.value)} // it doesn't update
-            />
-            <input
-              type="text"
-              value={castMember.character}
-              onChange={(e) =>
-                handleCastChange(index, "character", e.target.value) // it doesn't update
-              }
-            />
-          </li>
-        ))}
-      </ul>
-    )}
-  
-
-      <h1>Movie Photos:</h1>
-          {photos.length > 0 && (
-            <div className="photo-gallery">
-              {photos.slice(0, 5).map((photo) => (
-                <img
-                  key={photo.file_path}
-                  src={`https://image.tmdb.org/t/p/original${photo.file_path}`}
-                  alt="Movie Photo"
-                  className="photo-item"
-                />
+          {castAndCrew.length > 0 && (
+            <ul>
+              {castAndCrew.slice(0, 2).map((castMember, index) => (
+                <li key={castMember.cast_id}>
+                  {castMember.profile_path && (
+                    <img
+                      src={`https://image.tmdb.org/t/p/original${castMember.profile_path}`}
+                      alt={castMember.name}
+                      className="cast-photo"
+                    />
+                  )}
+                  <input
+                    type="text"
+                    value={castMember.name}
+                    onChange={(e) =>
+                      handleCastChange(index, "name", e.target.value)
+                    }
+                  />
+                  <input
+                    type="text"
+                    value={castMember.character}
+                    onChange={(e) =>
+                      handleCastChange(index, "character", e.target.value)
+                    }
+                  />
+                </li>
               ))}
-            </div>
+            </ul>
           )}
 
-        <h1>Movie Trailer:</h1>
+      <div className="field">
+  Photo URL:
+  <input
+    type="text"
+    name="photoUrl"
+    value={formData.photoUrl}
+    onChange={(e) => handleInputChange(e)}
+    disabled={isLoading}
+    required
+  />
+</div>
+
+<div className="field">
+  Photo Description:
+  <textarea
+    name="photoDescription"
+    value={formData.photoDescription}
+    onChange={(e) => handleInputChange(e)}
+    disabled={isLoading}
+  />
+</div>
+{photos.length > 0 && (
+  <div className="photo-gallery">
+    {photos.slice(0, 2).map((photo, index) => (
+      <div key={index} className="photo-item">
+        <img
+          src={`https://image.tmdb.org/t/p/original${photo.file_path}`}
+          alt="Movie Photo"
+          className="photo-item"
+        />
+        <input
+          type="text"
+          value={photo.description}
+          onChange={(e) =>
+            handlePhotoChange(index, "description", e.target.value)
+          }
+          placeholder="Edit photo description"
+        />
+      </div>
+    ))}
+  </div>
+)}
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
           {videos.length > 0 && (
             <div className="video-gallery">
-              {videos.slice(0, 5).map((video) => (
+              {videos.slice(0, 2).map((video) => (
                 <iframe
                   key={video.id}
                   width="300"

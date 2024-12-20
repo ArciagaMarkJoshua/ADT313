@@ -45,7 +45,7 @@ const Form = () => {
       url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=${currentPage}`,
       headers: {
         Accept: "application/json",
-        Authorization: API_KEY, 
+        Authorization: API_KEY,
       },
     })
       .then((response) => {
@@ -108,7 +108,7 @@ const Form = () => {
         setPhotos(imagesResponse.data.backdrops);
         setVideos(videosResponse.data.results);
       })
-      .catch((error) => console.error("Error fetching any movie detailess!", error))
+      .catch((error) => console.error("Error fetching any movie detailess!", error)) // catch an error incase movies, photos, cast and video failed to fetch 
       .finally(() => setIsLoading(false));
   };
 
@@ -147,7 +147,7 @@ const Form = () => {
           fetchMovieDetails(response.data.tmdbId);
         })
         .catch(() => {
-          setError("unavaible movies, kindly retry again!");
+          setError("Unavaible movies, kindly Retry again!"); // catch an error incase movie failed to fetch
         })
         .finally(() => {
           setIsLoading(false);
@@ -159,16 +159,16 @@ const Form = () => {
     const { name, type, value, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "Checkbox" ? checked : value,
     }));
   };
 
-  const handleCastChange = (index, field, value) => {
+  const handleCastsChanges = (index, field, value) => {
     const updatedCast = [...castAndCrew];
     updatedCast[index][field] = value;
     setCastAndCrew(updatedCast);
   };
-  const handlePhotoChange = (index, field, value) => {
+  const handlePhotosChanges = (index, field, value) => {
     const updatedPhotos = [...photos];
     updatedPhotos[index][field] = value;
     setPhotos(updatedPhotos);
@@ -190,7 +190,7 @@ const Form = () => {
     if (!formData.popularity) errors.push("Popularity is needed");
     if (!formData.voteAverage) errors.push("Vote average is needed");
     if (!selectedMovie)
-      errors.push("Please select a movie any from search bar results");
+      errors.push("Please select a movie any from search bar results!");
     return errors;
   };
 
@@ -206,7 +206,7 @@ const Form = () => {
 
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      setError("you must log in to acccess this feature!");
+      setError("You must log in to acccess this feature!");
       setIsLoading(false);
       return;
     }
@@ -234,7 +234,7 @@ const Form = () => {
       });
 
       const savedMovieId = response.data.id;
-      console.log(`Movie with ID ${savedMovieId} has been successfully saved.`); 
+      console.log(`Movie with ID ${savedMovieId} has been successfully saved!`);
 
       await saveVideos(savedMovieId, videos);
       await saveCast(savedMovieId, castAndCrew);
@@ -246,7 +246,7 @@ const Form = () => {
         "Error saving movie:",
         error.response?.data || error.message
       );
-      setError("Failed to save a movie. Please Retry again.");
+      setError("Failed to save a movie. Please Retry again!"); // catch an error incase movie failed to save
     } finally {
       setIsLoading(false);
     }
@@ -257,12 +257,12 @@ const Form = () => {
       console.log("No videos available to save!.");
       return;
     }
-  
+
     const limitedVideos = videos.slice(0, 2);
-  
+
     const accessToken = localStorage.getItem("accessToken");
     const userId = 1;
-  
+
     try {
       const videoPromises = limitedVideos.map((video) => {
         const videoData = {
@@ -275,44 +275,44 @@ const Form = () => {
           videoType: video.type || "Clip",
           official: 0,
         };
-  
+
         return axios.post("/admin/videos", videoData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
       });
-  
+
       await Promise.all(videoPromises);
-      console.log("Videos saved successfully");
+      console.log("Videos saved successfully!");
     } catch (error) {
       console.error(
         "Error saving videos:",
         error.response?.data || error.message
       );
-      setError("Failed to save any videos. Please Retry again!");
+      setError("Failed to save any videos. Please Retry again!"); // catch an error incase videos failed to save
     }
   };
-  
+
 
   const saveCast = async (movieId, cast) => {
     if (!cast || cast.length === 0) {
-      console.log("No cast available to save!");
+      console.log("No casts available to save!");
       return;
     }
-  
- 
+
+
     const limitedCast = cast.slice(0, 2);
-  
+
     const accessToken = localStorage.getItem("accessToken");
     const userId = 1;
-  
+
     try {
       const castPromises = limitedCast.map((castMember) => {
         if (!castMember.profile_path) {
           throw new Error(`Photo LINK is needed for ${castMember.name}`);
         }
-  
+
         const castData = {
           userId: userId,
           movieId: movieId,
@@ -320,70 +320,66 @@ const Form = () => {
           characterName: castMember.character,
           url: `https://image.tmdb.org/t/p/original${castMember.profile_path}`,
         };
-  
-        console.log("Saving cast data:", castData);
-  
+
+        console.log("Saving casts data:", castData);
+
         return axios.post("/admin/casts", castData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
       });
-  
+
       await Promise.all(castPromises);
-      console.log("Cast saved successfully");
+      console.log("Casts saved successfully!");
     } catch (error) {
       console.error(
         "Error saving cast:",
         error.response?.data || error.message
       );
-      setError(error.message || "Failed to save any cast. Please Retry again!");
+      setError(error.message || "Failed to save any casts. Please Retry again!");  // catch an error incase casts failed to save
     }
   };
-  
+
 
   const savePhotos = async (movieId, photos) => {
     if (!photos || photos.length === 0) {
-      console.log("No photos available to save.");
+      console.log("No photos to save!");
       return;
     }
-  
-
     const limitedPhotos = photos.slice(0, 2);
-  
+
     const accessToken = localStorage.getItem("accessToken");
     const userId = 1;
-  
-    
-  try {
-    const photoPromises = limitedPhotos.map((photo) => {
-      const photoData = {
-        userId: userId,
-        movieId: movieId,
-        url: photo.url, 
-        description: photo.description || "",
-      };
 
-      return axios.post("/admin/photos", photoData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+
+    try {
+      const photoPromises = limitedPhotos.map((photo) => {
+        const photoData = {
+          userId: userId,
+          movieId: movieId,
+          url: `https://image.tmdb.org/t/p/original${photo.file_path}`,
+          description: photo.description || "",
+        };
+
+        return axios.post("/admin/photos", photoData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
       });
-    });
 
-    await Promise.all(photoPromises);
-    console.log("Photos saved successfully");
-  } catch (error) {
-    console.error(
-      "Error saving photos:",
-      error.response?.data || error.message
-    );
-    setError("Failed to save any photos. Please Retry again!");
-  }
-};
 
-  
-
+      await Promise.all(photoPromises);
+      console.log("Photos saved successfully");
+    } catch (error) {
+      console.error(
+        "Error saving photos:",
+        error.response?.data || error.message
+      );
+      setError("Failed to save photos. Please try again!");  // catch an error incase photos failed to save
+    }
+  };
 
   const handleUpdate = handleSave;
 
@@ -413,6 +409,7 @@ const Form = () => {
             voteAverage: movieData.voteAverage,
             videos: movieData.videos || [],
             cast: movieData.cast || [],
+            photo: movieData.photo || [],
           });
         })
         .catch(() => {
@@ -431,44 +428,44 @@ const Form = () => {
       {error && <div className="error-message">{error}</div>}
       {isLoading && <div className="loading-message">Loading...</div>}
 
-  {movieId === undefined && (
-    <>
-      <div className="search-container">
-        Search Movie:{" "}
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setError("");<div className="search-container">
-  <label htmlFor="movie-search" className="search-label">Search Movie:</label>
-  <div className="search-input-container">
-    <input
-      id="movie-search"
-      type="text"
-      value={query}
-      onChange={(e) => {
-        setQuery(e.target.value);
-        setError("");
-      }}
-      onKeyPress={handleKeyPress}
-      placeholder="Enter movie title..."
-      disabled={isLoading}
-      className="search-input"
-    />
-    <button
-      className="search-button"
-      type="button"
-      onClick={() => {
-        setCurrentPage(1);
-        handleSearch();
-      }}
-      disabled={isLoading || !query.trim()}
-    >
-      {isLoading ? "Searching..." : "Search"}
-    </button>
-  </div>
-</div>
+      {movieId === undefined && (
+        <>
+          <div className="search-container">
+            Search Movie:{" "}
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setError(""); <div className="search-container">
+                  <label htmlFor="movie-search" className="search-label">Search Movie:</label>
+                  <div className="search-input-container">
+                    <input
+                      id="movie-search"
+                      type="text"
+                      value={query}
+                      onChange={(e) => {
+                        setQuery(e.target.value);
+                        setError("");
+                      }}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Enter movie title..."
+                      disabled={isLoading}
+                      className="search-input"
+                    />
+                    <button
+                      className="search-button"
+                      type="button"
+                      onClick={() => {
+                        setCurrentPage(1);
+                        handleSearch();
+                      }}
+                      disabled={isLoading || !query.trim()}
+                    >
+                      {isLoading ? "Searching..." : "Search"}
+                    </button>
+                  </div>
+                </div>
               }}
               onKeyPress={handleKeyPress}
               placeholder="Enter movie title..."
@@ -586,7 +583,7 @@ const Form = () => {
             />
           </div>
 
-        
+
           {castAndCrew.length > 0 && (
             <ul>
               {castAndCrew.slice(0, 2).map((castMember, index) => (
@@ -602,14 +599,14 @@ const Form = () => {
                     type="text"
                     value={castMember.name}
                     onChange={(e) =>
-                      handleCastChange(index, "name", e.target.value)
+                      handleCastsChanges(index, "name", e.target.value)
                     }
                   />
                   <input
                     type="text"
                     value={castMember.character}
                     onChange={(e) =>
-                      handleCastChange(index, "character", e.target.value)
+                      handleCastsChanges(index, "character", e.target.value)
                     }
                   />
                 </li>
@@ -617,52 +614,34 @@ const Form = () => {
             </ul>
           )}
 
-      <div className="field">
-  Photo URL:
-  <input
-    type="text"
-    name="photoUrl"
-    value={formData.photoUrl}
-    onChange={(e) => handleInputChange(e)}
-    disabled={isLoading}
-    required
-  />
-</div>
 
-<div className="field">
-  Photo Description:
-  <textarea
-    name="photoDescription"
-    value={formData.photoDescription}
-    onChange={(e) => handleInputChange(e)}
-    disabled={isLoading}
-  />
-</div>
-{photos.length > 0 && (
-  <div className="photo-gallery">
-    {photos.slice(0, 2).map((photo, index) => (
-      <div key={index} className="photo-item">
-        <img
-          src={`https://image.tmdb.org/t/p/original${photo.file_path}`}
-          alt="Movie Photo"
-          className="photo-item"
-        />
-        <input
-          type="text"
-          value={photo.description}
-          onChange={(e) =>
-            handlePhotoChange(index, "description", e.target.value)
-          }
-          placeholder="Edit photo description"
-        />
-      </div>
-    ))}
-  </div>
-)}
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+
+
+          {photos.length > 0 && (
+            <div className="photo-gallery">
+              {photos.slice(0, 2).map((photo, index) => (
+                <div key={index} className="photo-item">
+                  <img
+                    src={`https://image.tmdb.org/t/p/original${photo.file_path}`}
+                    alt="Movie Photo"
+                    className="photo-item"
+                  />
+                  <input
+                    type="text"
+                    value={photo.description}
+                    onChange={(e) =>
+                      handlePhotosChanges(index, "description", e.target.value)
+                    }
+                    placeholder="Edit photo description"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
           {videos.length > 0 && (
             <div className="video-gallery">
               {videos.slice(0, 2).map((video) => (
@@ -680,7 +659,7 @@ const Form = () => {
             </div>
           )}
 
-<div className="button-container">
+          <div className="button-container">
             <button className="btn-save btn-primary"
               type="button"
               onClick={movieId ? handleUpdate : handleSave}
